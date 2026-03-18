@@ -1,9 +1,9 @@
 from langgraph.graph import StateGraph, END
-from agent.nodes.analyst_node import get_attr_analyst_node
-from agent.nodes.reporter_node import get_attr_reporter_node
-from agent.nodes.prepare_trade_node import get_attr_prepare_trade_node
-from agent.nodes.router import router
-from agent.state import State
+from app.agent.nodes.analyst_node import get_attr_analyst_node
+from app.agent.nodes.reporter_node import get_attr_reporter_node
+from app.agent.nodes.prepare_trade_node import get_attr_prepare_trade_node
+from app.agent.nodes.router import router
+from app.agent.state import State
 
 def create_agent():
     builder = StateGraph(State)

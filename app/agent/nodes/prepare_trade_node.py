@@ -1,4 +1,4 @@
-from agent.state import State
+from app.agent.state import State
 
 def get_attr_prepare_trade_node():
     """This is a factory function that returns a node that can be used in the graph"""

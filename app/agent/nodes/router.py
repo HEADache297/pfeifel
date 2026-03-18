@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Literal
 from langchain_anthropic import ChatAnthropic
-from agent.state import State
+from app.agent.state import State
 
 class RouteSelection(BaseModel):
     """Determins ther next step in the stock portfolio managment workflow based on user intent"""

@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # 1. The "Accountant" (PostgreSQL)
+  db:
+    image: postgres:16
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: trading_bot
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d trading_bot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 2. The "Researcher" (Qdrant)
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: qdrant_db
+    restart: always
+    ports:
+      - "6333:6333" # HTTP API
+      - "6334:6334" # gRPC API
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+  # 3. Your AI Agent (FastAPI)
+  api:
+    build: .
+    container_name: agent_api
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/trading_bot
+      - QDRANT_HOST=qdrant
+    volumes:
+      - .:/app # Hot-reload for development
+
+volumes:
+  pgdata:
+  qdrant_data:
